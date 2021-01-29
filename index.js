@@ -1,46 +1,52 @@
 const gameShowcase = (() => {
-	////////// DATA FETCHING//////////
-	const getDefaultGames = async () => {
-		const key = '4b75a0922bbd41619c3a135bb234a3a5';
-		const defaultURL = `https://api.rawg.io/api/games?page_size=40&key=${key}`;
+	////////// DATA FETCHING/////////
+	const searchInput = document.querySelector('input');
+	const dropdown = document.querySelector('.dropdown');
+	const resultsWrapper = document.querySelector('.results');
 
-		const response = await fetch(defaultURL);
-		return response.json();
-	};
-
-	const searchGame = async (name) => {
+	const searchData = async (name) => {
 		const key = '4b75a0922bbd41619c3a135bb234a3a5';
-		const url = `https://api.rawg.io/api/games?search=${name}&page_size=40&key=${key}`;
+		const url = `https://api.rawg.io/api/games?search=${name}&key=${key}`;
 
 		const response = await fetch(url);
 		const gameResult = await response.json();
 
 		const { results } = gameResult;
 
-    const autoComplete = document.querySelector('.autocom-box');
-    
-    if (!results) {
-      document.querySelector('.search-input').classList.remove('is-active');
-      return;
-    }
+		const filteredResults = results.filter((game) => {
+			const currentGame = game.name.toLowerCase()
+			return currentGame.includes(name.toLowerCase());
+		});
 
-    autoComplete.innerHTML = '';
-    document.querySelector('.search-input').classList.add('is-active');
+		if (searchInput.value.trim() === '') {
+			resultsWrapper.innerHTML = '';
+			dropdown.classList.remove('is-active');
+			return;
+		}
+		resultsWrapper.innerHTML = '';
+		dropdown.classList.add('is-active');
 
-    for(let item of results) {
+		for (let item of filteredResults) {
       const option = document.createElement('a');
-      const gameImg = document.createElement('img');
+      const img = document.createElement('img');
+      
+			option.classList.add('dropdown-item');
 
-      gameImg.src = item.background_image;
+			option.textContent = item.name;
+      img.src = item.background_image;
 
-      option.textContent = item.name;
-      option.prepend(gameImg)
-
-			autoComplete.appendChild(option);
-    }
+      option.prepend(img);
+			resultsWrapper.appendChild(option);
+		}
 	};
 	////////// EVENT LISTENERS //////////
-	document.querySelector('.search').addEventListener('input', (e) => {
-		searchGame(e.target.value);
+	searchInput.addEventListener('input', (e) => {
+		searchData(e.target.value);
 	});
 })();
+
+const testObj = {
+	name: "The Witcher 3: Wild Hunt"
+}
+
+console.log(testObj.name.toLowerCase().includes('witcher'))
