@@ -39,14 +39,19 @@ const gameShowcase = (() => {
 			resultsWrapper.appendChild(option);
 		}
 	};
+	// Delay 2 seconds so api doesnt get called for every input
 	////////// EVENT LISTENERS //////////
 	searchInput.addEventListener('input', (e) => {
-		searchData(e.target.value);
+		
+		let timeout = null;
+
+		if(timeout) {
+			clearTimeout(timeout)
+		}
+		timeout = setTimeout(() => {
+			searchData(e.target.value);
+		}, 1500)
 	});
 })();
 
-const testObj = {
-	name: "The Witcher 3: Wild Hunt"
-}
 
-console.log(testObj.name.toLowerCase().includes('witcher'))
