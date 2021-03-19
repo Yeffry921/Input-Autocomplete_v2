@@ -7,7 +7,6 @@
 * CSS
 * JS
 
+# Description 
 
-## Authors
-
-* Anthony Batista
+ - Autocomple input, practice for reusable code.
